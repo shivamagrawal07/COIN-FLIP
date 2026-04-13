@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cricket Toss</title>
+    <style>
+        /* CSS Styling - Cricket Theme */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #2e7d32; /* Grass green background */
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 400px;
+        }
+
+        h1 {
+            color: #1b5e20;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #1b5e20;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            margin: 10px 5px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #388e3c;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .flip-animation {
+            font-size: 40px;
+            animation: flip 1s infinite;
+        }
+
+        @keyframes flip {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        .summary-box {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #4caf50;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🏏 Cricket Match Toss 🏏</h1>
+
+    <div id="setup-section">
+        <input type="text" id="team1" placeholder="Enter Team 1 Name">
+        <input type="text" id="team2" placeholder="Enter Team 2 Name">
+        <select id="call">
+            <option value="" disabled selected>Team 1, make your call!</option>
+            <option value="Heads">Heads</option>
+            <option value="Tails">Tails</option>
+        </select>
+        <button onclick="tossCoin()">Toss the Coin!</button>
+    </div>
+
+    <div id="loading-section" class="hidden">
+        <div class="flip-animation">🪙</div>
+        <p>Flipping the coin...</p>
+    </div>
+
+    <div id="decision-section" class="hidden">
+        <h2 id="toss-result-text"></h2>
+        <h3 id="winner-text" style="color: #d32f2f;"></h3>
+        <p>What do you choose to do?</p>
+        <div style="display: flex;">
+            <button onclick="makeDecision('Bat')">Bat First</button>
+            <button onclick="makeDecision('Bowl')">Bowl First</button>
+        </div>
+    </div>
+
+    <div id="summary-section" class="hidden">
+        <div class="summary-box">
+            <h2 style="margin-top:0;">📢 Match Update</h2>
+            <p id="final-announcement" style="font-size: 18px; font-weight: bold;"></p>
+        </div>
+        <button onclick="location.reload()" style="background-color: #616161; margin-top: 20px;">Play Again</button>
+    </div>
+</div>
+
+<script>
+    // JavaScript Logic
+    let winnerName = "";
+
+    function tossCoin() {
+        const team1 = document.getElementById('team1').value.trim();
+        const team2 = document.getElementById('team2').value.trim();
+        const call = document.getElementById('call').value;
+
+        // Basic validation
+        if (!team1 || !team2 || !call) {
+            alert("Please enter both team names and select Heads or Tails.");
+            return;
+        }
+
+        // Hide setup, show loading
+        document.getElementById('setup-section').classList.add('hidden');
+        document.getElementById('loading-section').classList.remove('hidden');
+
+        // Simulate a 1.5 second coin flip
+        setTimeout(() => {
+            document.getElementById('loading-section').classList.add('hidden');
+            
+            // Randomize toss
+            const isHeads = Math.random() < 0.5;
+            const tossResult = isHeads ? "Heads" : "Tails";
+            
+            // Determine winner
+            if (call === tossResult) {
+                winnerName = team1;
+            } else {
+                winnerName = team2;
+            }
+
+            // Update text and show decision section
+            document.getElementById('toss-result-text').innerText = `It's ${tossResult}!`;
+            document.getElementById('winner-text').innerText = `🎉 ${winnerName} wins the toss! 🎉`;
+            document.getElementById('decision-section').classList.remove('hidden');
+
+        }, 1500);
+    }
+
+    function makeDecision(choice) {
+        // Hide decision, show final summary
+        document.getElementById('decision-section').classList.add('hidden');
+        
+        document.getElementById('final-announcement').innerText = 
+            `${winnerName} won the toss and elected to ${choice.toLowerCase()} first.`;
+            
+        document.getElementById('summary-section').classList.remove('hidden');
+    }
+</script>
+
+</body>
+</html>
